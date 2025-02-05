@@ -1,6 +1,27 @@
 const express = require('express');
 const mongooseDB = require('./config/database');
 const app = express();
+const User = require('./models/user');
+
+app.post("/signup", async (req, res) => {
+
+    const user = new User({
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'johndoe@example.com',
+        password: 'password123'
+    })
+    try{
+        await user.save();
+        res.send("User Added Successfully..!")
+    }
+    catch(err){
+        res.status(400).send("Error saving user: " + err.message);
+    };
+});
+
+
+
 
 mongooseDB()
     .then(() => {
