@@ -3,14 +3,15 @@ const mongooseDB = require('./config/database');
 const app = express();
 const User = require('./models/user');
 
+app.use(express.json()); //middleware-convert json data that comes from the postman 
+
+
+
 app.post("/signup", async (req, res) => {
 
-    const user = new User({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'johndoe@example.com',
-        password: 'password123'
-    })
+    console.log(req.body);
+
+    const user = new User(req.body);
     try{
         await user.save();
         res.send("User Added Successfully..!")
@@ -29,10 +30,10 @@ mongooseDB()
         app.listen(4444, () => {
             console.log('Server is running on port 4444');
         });
-    }).
-    catch((err) => {
-        console.error("connection cannot be established");
     })
+    .catch((err) => {
+        console.error("connection cannot be established");
+    });
 
 
 
