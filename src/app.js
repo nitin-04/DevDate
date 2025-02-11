@@ -2,14 +2,15 @@ const express = require('express');
 const mongooseDB = require('./config/database');
 const app = express();
 const User = require('./models/user');
+const {validateSignUpData} = require('./utils/validation');
 
 app.use(express.json()); //middleware-convert json data that comes from the postman 
 
 
 
 app.post("/signup", async (req, res) => {
-
-    console.log(req.body);
+    //Validation of the Data
+    validateSignUpData(req);
 
     const user = new User(req.body);
     try {
@@ -17,7 +18,7 @@ app.post("/signup", async (req, res) => {
         res.send("User Added Successfully..!")
     }
     catch (err) {
-        res.status(400).send("Error saving user: " + err.message);
+        res.status(400).send("ERROR : " + err.message);
     };
 });
 
