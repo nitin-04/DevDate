@@ -4,10 +4,12 @@ const app = express();
 const User = require('./models/user');
 const { validateSignUpData } = require('./utils/validation');
 const bcrypt = require('bcrypt');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 
 
 app.use(express.json()); //middleware-convert json data that comes from the postman 
-
+app.use(cookieParser());
 
 
 app.post("/signup", async (req, res) => {
@@ -48,6 +50,11 @@ app.post("/login", async (req, res) => {
         const isPasswordValid = await bcrypt.compare(password, user.password)
 
         if (isPasswordValid) {
+
+            const token = await jwt.sign({ _id: user.id }, "DEV@Date$2025");
+            console.log(token);
+            //Add the token to the cookies and return the response
+            res.cookie("token", token);
             res.send("Login Successfully...")
         }
         else {
@@ -59,6 +66,26 @@ app.post("/login", async (req, res) => {
     }
 
 
+})
+
+
+app.get("/profile", async (req, res) => {
+    try{
+
+        const cookies = req.cookies;
+        
+        const { token } = cookies;
+        
+        const decodedMessage = await jwt.verify(token, "DEV@Date$2025")
+        
+        const { _id } = decodedMessage;
+        console.log("Logged in user: " + _id);
+        
+        res.send("Reading cookies...");
+    }
+    catch(err){
+    res.status(400).send("ERROR: " + err.message)
+    }
 })
 
 
