@@ -2,3 +2,4 @@ node_modules
 middleware.js
 auth.js
 database.js
+.env
