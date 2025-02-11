@@ -2,18 +2,31 @@ const express = require('express');
 const mongooseDB = require('./config/database');
 const app = express();
 const User = require('./models/user');
-const {validateSignUpData} = require('./utils/validation');
+const { validateSignUpData } = require('./utils/validation');
+const bcrypt = require('bcrypt');
+
 
 app.use(express.json()); //middleware-convert json data that comes from the postman 
 
 
 
 app.post("/signup", async (req, res) => {
-    //Validation of the Data
-    validateSignUpData(req);
-
-    const user = new User(req.body);
     try {
+        //Validation of the Data
+        validateSignUpData(req);
+
+        const { firstName, lastName, emailId, password } = req.body;
+
+        //Encrypt the password
+        const passwordHash = await bcrypt.hash(password, 10)
+        // console.log(passwordHash)
+
+        const user = new User({
+            firstName,
+            lastName,
+            emailId,
+            password
+        });
         await user.save();
         res.send("User Added Successfully..!")
     }
@@ -88,7 +101,7 @@ app.patch("/user/:userId", async (req, res) => {
             throw new Error("Update Not Allowed");
         }
 
-        if(data?.skills.length > 12){
+        if (data?.skills.length > 12) {
             throw new Error("Skills can't exceed 12");
         }
 
