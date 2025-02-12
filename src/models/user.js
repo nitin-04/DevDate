@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require('bcrypt')
+const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -31,29 +33,46 @@ const userSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        validate(value){
-            if(!["male", "female", "other"].includes(value)){
+        validate(value) {
+            if (!["male", "female", "other"].includes(value)) {
                 throw new Error("Gender should be either male, female or other");
             }
         }
     },
-    photoUrl:{
+    photoUrl: {
         type: String,
         validate(value) {
-            if(!validator.isURL(value)){
+            if (!validator.isURL(value)) {
                 throw new Error("Invalid URL" + value);
             };
         },
     },
-    about:{
+    about: {
         type: String,
         default: "This is a default description"
     },
-    skills:{
-        type:[String],
+    skills: {
+        type: [String],
     },
-},{
-    timestamps:true,
+}, {
+    timestamps: true,
 });
+
+userSchema.methods.getJWT = async function () {
+    const user = this;
+
+    const token = await jwt.sign({ _id: user._id }, "DEV@Date$2025", { expiresIn: "7d" });
+    return token;
+}
+
+
+userSchema.methods.validatePassword = async function (passwordInputByUser) {
+    const user = this;
+    const passwordHash = user.password
+
+    const isPasswordValid = await bcrypt.compare(passwordInputByUser, passwordHash);
+
+    return isPasswordValid;
+}
 
 module.exports = mongoose.model("User", userSchema);
