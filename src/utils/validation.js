@@ -19,7 +19,6 @@ const vallidateEditProfileData = (req) => {
     const allowedEditFields = [
         "firstName",
         "lastName",
-        "emailId",
         "age",
         "gender",
         "about",
