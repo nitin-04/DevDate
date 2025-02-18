@@ -41,6 +41,7 @@ const userSchema = new mongoose.Schema({
     },
     photoUrl: {
         type: String,
+        default: "https://i.pinimg.com/originals/7d/07/74/7d0774c44f6768a8e5696edff37731e9.jpg",
         validate(value) {
             if (!validator.isURL(value)) {
                 throw new Error("Invalid URL" + value);
