@@ -22,6 +22,7 @@ const vallidateEditProfileData = (req) => {
         "age",
         "gender",
         "about",
+        "photoUrl",
         "skills"
     ];
 

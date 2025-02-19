@@ -39,6 +39,10 @@ const userSchema = new mongoose.Schema({
         }
 
     },
+    about: {
+        type: String,
+        default: "This is a default description"
+    },
     photoUrl: {
         type: String,
         default: "https://i.pinimg.com/originals/7d/07/74/7d0774c44f6768a8e5696edff37731e9.jpg",
@@ -47,10 +51,6 @@ const userSchema = new mongoose.Schema({
                 throw new Error("Invalid URL" + value);
             };
         },
-    },
-    about: {
-        type: String,
-        default: "This is a default description"
     },
     skills: {
         type: [String],
