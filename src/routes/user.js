@@ -4,7 +4,7 @@ const userRouter = express.Router();
 const ConnectionRequest = require("../models/connectionRequest");
 
 const User = require("../models/user");
-const USER_SAFE_DATA = ["firstName", "lastName", "photoUrl", "gender", "skills", "about"];
+const USER_SAFE_DATA = ["firstName", "lastName", "photoUrl", "gender", "skills", "about", "age"];
 
 userRouter.get("/user/requests/received", userAuth, async (req, res) => {
 
@@ -23,7 +23,7 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
 
     }
     catch (err) {
-        request.status(400).send("ERROR: " + err.message);
+        request.status(401).send("ERROR: " + err.message);
     }
 
 
@@ -53,7 +53,7 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
         res.json({ data });
     }
     catch (err) {
-        response.status(400).send({ message: err.message });
+        res.status(401).send({ message: err.message });
     }
 });
 
